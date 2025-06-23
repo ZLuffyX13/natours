@@ -24,6 +24,14 @@ router
   .get(userController.getAllUsers)
   .post(userController.createUser);
 
+router.post(
+  '/favorites/:tourId',
+  authController.protect,
+  userController.toggleFavorite
+);
+
+router.get('/favorites', authController.protect, userController.getFavorites);
+
 router
   .route('/:id')
   .get(userController.getUser)

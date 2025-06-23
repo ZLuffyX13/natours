@@ -84,3 +84,34 @@ exports.deleteUser = (req, res) => {
     message: 'This route is not yet defined!'
   });
 };
+
+exports.toggleFavorite = catchAsync(async (req, res, next) => {
+  const user = await User.findById(req.user.id);
+
+  // eslint-disable-next-line prefer-destructuring
+  const tourId = req.params.tourId;
+  const index = user.favorites.findIndex(fav => fav.toString() === tourId);
+
+  if (index === -1) {
+    // Adiciona se não existe
+    user.favorites.push(tourId);
+  } else {
+    // Remove se já existe
+    user.favorites.splice(index, 1);
+  }
+
+  await user.save({ validateBeforeSave: false });
+
+  res.status(200).json({
+    status: 'success',
+    favorites: user.favorites
+  });
+});
+
+exports.getFavorites = catchAsync(async (req, res, next) => {
+  const user = await User.findById(req.user.id).populate('favorites');
+  res.status(200).json({
+    status: 'success',
+    favorites: user.favorites
+  });
+});

@@ -21,6 +21,12 @@ const userSchema = new mongoose.Schema({
     enum: ['user', 'guide', 'lead-guide', 'admin'],
     default: 'user'
   },
+  favorites: [
+    {
+      type: mongoose.Schema.ObjectId,
+      ref: 'Tour'
+    }
+  ],
   password: {
     type: String,
     required: [true, 'Please provide a password'],
